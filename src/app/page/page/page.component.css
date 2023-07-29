@@ -1,8 +1,29 @@
 .page-from{
-     margin:0 30%;
      width: 400px;
+     margin: 0 30%5px ;
+     font-size: 12px;
 }
 
+.example-full-width {
+     width: 100%;
+   }
 .m-10{
      margin:10px
+}
+.user-table {
+     margin-top:10px;
+     width: 100%;
+}   
+
+[hidden] {
+     display: none !important;
+ }
+
+.error{
+     text-align: center;
+     margin: 5px;
+}
+.addbutton{
+     float: right;
+     margin: 20px;
 }

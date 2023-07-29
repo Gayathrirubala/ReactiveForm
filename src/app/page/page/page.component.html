@@ -1,28 +1,76 @@
-<section class="page-from">
-     <mat-card  [ngStyle]="{'text-align':'center'}">
-          <mat-card-title>Reactive Form</mat-card-title>
-          <form class=""  [formGroup]="loginForm" (submit)="saveValue()">
-               <mat-form-field appearance="outline">
+<section >
+     <button mat-raised-button (click)="addUser();reset();" color="accent" class="addbutton">Add User</button>
+     <mat-card class="page-from" [hidden]="!showForm">
+          <mat-card-header>
+               <h3>
+                    <span *ngIf="formAction=='create'">Add User</span> 
+                    <span *ngIf="formAction=='edit'">Edit User</span> 
+               </h3>
+               </mat-card-header>
+          <form    [formGroup]="loginForm" (ngSubmit)="saveValue()">
+               <mat-form-field appearance="outline" class="example-full-width">
                     <mat-label>Enter Your First Name</mat-label>
-                    <input autocomplete="off" formControlName="firstname" matInput type="text" name="firstname" placeholder="Ex. Gayathri">
+                    <input autocomplete="off" formControlName="firstname" matInput type="text" name="firstname"  id="firstname" (keyup.enter)="moveToNext('lastname')"placeholder="Ex. Gayathri">
                </mat-form-field>
-               <mat-form-field appearance="outline">
+               <mat-form-field appearance="outline" class="example-full-width">
                     <mat-label>Enter Your Last Name</mat-label>
-                    <input autocomplete="off" matInput type="text" formControlName="lastname" name="lastname" placeholder="Ex. Ravi">
+                    <input autocomplete="off" matInput type="text" formControlName="lastname" name="lastname"  id="lastname" (keyup.enter)="moveToNext('email')" placeholder="Ex. Ravi">
                </mat-form-field>
-               <mat-form-field appearance="outline">
+               <mat-form-field appearance="outline" class="example-full-width">
                     <mat-label>Enter Your Email ID</mat-label>
-                    <input type="email" matInput formControlName="email"placeholder="Ex. pat@example.com">
+                    <input type="email" matInput formControlName="email" placeholder="Ex. pat@example.com" id="email" (keyup.enter)="moveToNext('mobile')">
                     <mat-error *ngIf="loginForm.get('email')?.errors ">Please enter valid email id</mat-error>
                </mat-form-field>
-               <mat-form-field appearance="outline">
+               <mat-form-field appearance="outline" class="example-full-width">
                     <mat-label>Enter Your Mobile no</mat-label>
-                    <input autocomplete="off" formControlName="mobile" matInput  name="mobile" placeholder="Enter your number" >
+                    <input autocomplete="off" formControlName="mobile" matInput  name="mobile" id="mobile" placeholder="Enter your number" >
                     <mat-error *ngIf="mobile?.hasError('pattern')">Please enter valid 10 digit mobile no</mat-error>
                </mat-form-field>
                <br>
-               <button  type="button"class="m-10" mat-raised-button (click)="reset()" color="accent">Reset</button>
-               <button [disabled]="loginForm.invalid" type="submit" mat-raised-button color="primary">Submit</button>
+               <span>
+                    <button  type="button" mat-raised-button (click)="reset()" color="default">Reset</button>
+                    <button [disabled]="loginForm.invalid" type="submit" mat-raised-button color="primary">Submit</button>
+     
+               </span>
+               
            </form>
      </mat-card>
+     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 user-table">
+     <ng-container matColumnDef="firstname">
+          <th mat-header-cell *matHeaderCellDef> First Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.firstname}} </td>
+     </ng-container>
+     
+     <ng-container matColumnDef="lastname">
+          <th mat-header-cell *matHeaderCellDef> Last Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastname}} </td>
+     </ng-container>
+     
+     <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+     </ng-container>
+     
+     <ng-container matColumnDef="mobile">
+          <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
+          <td mat-cell *matCellDef="let element"> {{element.mobile}} </td>
+     </ng-container>
+     
+     <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let element"> 
+               <button mat-icon-button class="iconbutton"color="primary"(click)="edit(element)"><mat-icon>edit</mat-icon> </button>
+               <button mat-icon-button class="iconbutton"(click)="delete(element.id)" color="warn"><mat-icon>delete</mat-icon></button>
+          </td>
+          </ng-container>
+     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+     </table>
+     <p class="error" *ngIf="!(users && users?.length)">No Record Found !</p>
+
+     <mat-paginator [hidden]="!dataSource.data.length" [length]="dataSource.data.length"
+     [pageSize]="10"
+     [pageSizeOptions]="[5, 10, 25, 100]"
+     aria-label="Select page">
+     </mat-paginator>
 </section>
